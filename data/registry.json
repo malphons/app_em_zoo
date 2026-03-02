@@ -1,0 +1,55 @@
+{
+    "schema_version": "1.0",
+    "base_url_pattern": "https://{github_user}.github.io/{repo_name}",
+    "github_user": "malphons",
+    "spokes": [
+        {
+            "id": "electrostatics",
+            "repo_name": "em-zoo-st-electrostatics",
+            "group": "statics",
+            "category": "electrostatics",
+            "label": "Electrostatics",
+            "enabled": true
+        },
+        {
+            "id": "magnetostatics",
+            "repo_name": "em-zoo-st-magnetostatics",
+            "group": "statics",
+            "category": "magnetostatics",
+            "label": "Magnetostatics",
+            "enabled": true
+        },
+        {
+            "id": "induction",
+            "repo_name": "em-zoo-dy-induction",
+            "group": "dynamics",
+            "category": "induction",
+            "label": "Induction",
+            "enabled": true
+        },
+        {
+            "id": "maxwell-system",
+            "repo_name": "em-zoo-dy-maxwell",
+            "group": "dynamics",
+            "category": "maxwell-system",
+            "label": "Maxwell System",
+            "enabled": true
+        },
+        {
+            "id": "wave-propagation",
+            "repo_name": "em-zoo-wv-propagation",
+            "group": "waves",
+            "category": "wave-propagation",
+            "label": "Wave Propagation",
+            "enabled": true
+        },
+        {
+            "id": "wave-interactions",
+            "repo_name": "em-zoo-wv-interactions",
+            "group": "waves",
+            "category": "wave-interactions",
+            "label": "Wave Interactions",
+            "enabled": true
+        }
+    ]
+}
