@@ -403,6 +403,83 @@
         return svgWrap(rings + source + observer + delay + label);
     }
 
+    /* Gauss's Law for B: closed magnetic field lines (N→S loops) */
+    function generateGaussLawBThumbnail(color) {
+        // Bar magnet at center
+        var magnet = '<rect x="185" y="100" width="30" height="50" rx="3" fill="' + color + '" opacity="0.4"/>' +
+            '<text x="200" y="118" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">N</text>' +
+            '<text x="200" y="143" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">S</text>';
+        // Closed field lines (loops from N to S)
+        var lines = '';
+        var radii = [40, 65, 95];
+        for (var k = 0; k < radii.length; k++) {
+            var r = radii[k];
+            lines += '<ellipse class="em-field-line" cx="200" cy="125" rx="' + r + '" ry="' + (r * 0.6) + '"' +
+                ' fill="none" stroke="' + color + '" stroke-width="1.5" stroke-dasharray="6 3"' +
+                ' opacity="' + (0.7 - k * 0.15) + '"/>';
+        }
+        // Flux = 0 label
+        var label = '<text x="200" y="228" text-anchor="middle" fill="' + color +
+            '" font-size="11" font-weight="600" opacity="0.7">\u222E B\u00b7dA = 0</text>';
+        return svgWrap(magnet + lines + label);
+    }
+
+    /* Wave emergence: two stacked E/B sinusoids with source line */
+    function generateWaveEmergenceThumbnail(color) {
+        // Source line
+        var srcLine = '<line x1="80" y1="30" x2="80" y2="220" stroke="#f85149" stroke-width="1.5"' +
+            ' stroke-dasharray="4 3" opacity="0.6"/>' +
+            '<text x="80" y="240" text-anchor="middle" fill="#f85149" font-size="9" opacity="0.6">source</text>';
+        // E wave (top, blue)
+        var eWave = '<path class="em-wave" d="';
+        for (var i = 80; i < 380; i += 2) {
+            var y = 80 + 35 * Math.sin(((i - 80) / 300) * 3 * Math.PI);
+            eWave += (i === 80 ? 'M' : 'L') + i + ',' + y;
+        }
+        eWave += '" fill="none" stroke="#58a6ff" stroke-width="2" opacity="0.8"/>';
+        var eLabel = '<text x="30" y="85" fill="#58a6ff" font-size="12" font-weight="600" opacity="0.7">E</text>';
+        // B wave (bottom, orange)
+        var bWave = '<path class="em-wave" d="';
+        for (var i = 80; i < 380; i += 2) {
+            var y = 170 + 35 * Math.sin(((i - 80) / 300) * 3 * Math.PI);
+            bWave += (i === 80 ? 'M' : 'L') + i + ',' + y;
+        }
+        bWave += '" fill="none" stroke="#f0883e" stroke-width="2" opacity="0.8"/>';
+        var bLabel = '<text x="30" y="175" fill="#f0883e" font-size="12" font-weight="600" opacity="0.7">B</text>';
+        return svgWrap(srcLine + eWave + eLabel + bWave + bLabel);
+    }
+
+    /* Dipole radiation: expanding rings modulated by sin²θ */
+    function generateDipoleRadiationThumbnail(color) {
+        // Dipole at center
+        var dipole = '<line x1="200" y1="110" x2="200" y2="140" stroke="' + color +
+            '" stroke-width="3" opacity="0.8"/>' +
+            '<circle cx="200" cy="110" r="4" fill="#f85149" opacity="0.8"/>' +
+            '<circle cx="200" cy="140" r="4" fill="#58a6ff" opacity="0.8"/>';
+        // Expanding wavefront rings with sin²θ modulation
+        var rings = '';
+        var baseRadii = [30, 55, 80, 105];
+        for (var k = 0; k < baseRadii.length; k++) {
+            var rb = baseRadii[k];
+            var opac = 0.6 - k * 0.12;
+            // Build modulated ring path
+            var pts = '';
+            for (var a = 0; a < 360; a += 5) {
+                var rad = a * Math.PI / 180;
+                var sinT = Math.sin(rad);
+                var mod = 0.3 + 0.7 * sinT * sinT; // sin²θ modulation
+                var r = rb * mod;
+                var px = 200 + r * Math.cos(rad);
+                var py = 125 + r * Math.sin(rad);
+                pts += (a === 0 ? 'M' : 'L') + px.toFixed(1) + ',' + py.toFixed(1);
+            }
+            pts += 'Z';
+            rings += '<path class="em-wave" d="' + pts + '" fill="none" stroke="' + color +
+                '" stroke-width="1.5" opacity="' + opac + '"/>';
+        }
+        return svgWrap(dipole + rings);
+    }
+
     /* ---------- Thumbnail dispatch ---------- */
 
     var THUMBNAIL_MAP = {
@@ -415,6 +492,9 @@
         'displacement-current':  generateDisplacementThumbnail,
         'maxwell-equations':     generateMaxwellThumbnail,
         'lorentz-force':         generateLorentzThumbnail,
+        'gauss-law-b':           generateGaussLawBThumbnail,
+        'wave-emergence':        generateWaveEmergenceThumbnail,
+        'dipole-radiation':      generateDipoleRadiationThumbnail,
         'em-wave-equation':      generateWaveEqThumbnail,
         'plane-waves':           generatePlaneWaveThumbnail,
         'poynting-vector':       generatePoyntingThumbnail,
